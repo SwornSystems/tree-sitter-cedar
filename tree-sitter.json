@@ -11,7 +11,7 @@
       }
     ],
     "links": {
-      "repository": "https://github.com/DuskSystems/tree-sitter-cedar"
+      "repository": "https://github.com/SwornSystems/tree-sitter-cedar"
     }
   },
   "grammars": [

@@ -3,7 +3,7 @@
 
   inputs = {
     nixpkgs = {
-      url = "github:NixOS/nixpkgs/nixos-unstable-small";
+      url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     };
   };
 
@@ -38,6 +38,15 @@
     {
       overlays = {
         default = final: _prev: {
+          vale-styles = final.symlinkJoin {
+            name = "vale-styles";
+            paths = with final.valeStyles; [
+              proselint
+              write-good
+              redhat
+            ];
+          };
+
           tree-sitter-cedar = final.callPackage ./nix/pkgs/tree-sitter-cedar/package.nix { inherit version; };
           tree-sitter-cedarschema = final.callPackage ./nix/pkgs/tree-sitter-cedarschema/package.nix { inherit version; };
           tree-sitter-cedarentities = final.callPackage ./nix/pkgs/tree-sitter-cedarentities/package.nix { inherit version; };
@@ -60,6 +69,9 @@
           env = {
             # Nix
             NIX_PATH = "nixpkgs=${nixpkgs.outPath}";
+
+            # Vale
+            VALE_STYLES_PATH = "${pkgs.vale-styles}/share/vale/styles";
 
             # Snapshots
             PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
@@ -98,6 +110,8 @@
 
             # Markdown
             lychee
+            vale
+            vale-ls
 
             # TOML
             tombi
@@ -112,6 +126,7 @@
             # Nushell
             nushell
             nufmt
+            nu-lint
 
             # Git
             committed
@@ -128,6 +143,9 @@
           name = "tree-sitter-cedar-ci-shell";
 
           env = {
+            # Vale
+            VALE_STYLES_PATH = "${pkgs.vale-styles}/share/vale/styles";
+
             # Snapshots
             PLAYWRIGHT_BROWSERS_PATH = pkgs.playwright-driver.browsers;
             FONTCONFIG_FILE = pkgs.makeFontsConf {
@@ -158,6 +176,7 @@
 
             # Markdown
             lychee
+            vale
 
             # TOML
             tombi
@@ -168,6 +187,7 @@
             # Nushell
             nushell
             nufmt
+            nu-lint
 
             # Git
             committed

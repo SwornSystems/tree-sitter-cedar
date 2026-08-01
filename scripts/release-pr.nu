@@ -1,28 +1,41 @@
 #!/usr/bin/env -S nix develop --command nu
 
-# Open a release PR.
+# Open a release pull request.
 def main []: nothing -> nothing {
-    if (git branch --show-current | str trim) != "main" {
-        print "Current branch is not main"
+    if (git branch --show-current | str trim) != main {
+        print --stderr "Current branch is not main"
         exit 1
     }
 
-    if (git status --porcelain | str trim) != "" {
-        print "Dirty working tree"
+    let dirty = git status --porcelain | str trim
+    if ($dirty | is-not-empty) {
+        print --stderr "Working tree dirty"
         exit 1
     }
 
-    let token: string = gh auth token | str trim
+    let auth = do { gh auth token } | complete
+    if $auth.exit_code != 0 {
+        print --stderr "Not signed in to GitHub"
+        exit 1
+    }
+
+    let token: string = $auth.stdout | str trim
 
     (
         npx release-please release-pr
-            --repo-url DuskSystems/tree-sitter-cedar
+            --repo-url SwornSystems/tree-sitter-cedar
             --token $token
             --draft-pull-request
     )
 
+    let list = do { gh pr list --state open --json headRefName,title } | complete
+    if $list.exit_code != 0 {
+        print --stderr "Failed to list pull requests"
+        exit 1
+    }
+
     let branches = (
-        gh pr list --state open --json headRefName,title
+        $list.stdout
         | from json
         | where title =~ '^chore: Release'
         | get headRefName

@@ -2,19 +2,12 @@
 
 # Run all linters and formatters.
 def main []: nothing -> nothing {
-    # Git
-    let origin: record<stdout: string, stderr: string, exit_code: int> = do { git rev-parse --verify origin/main } | complete
-    let main: string = if $origin.exit_code == 0 {
-        $origin.stdout | str trim
-    } else {
-        git rev-parse --verify main | str trim
-    }
+    let markdown: list<string> = files "*.md"
+    let scripts: list<string> = files "*.nu"
+    let nix: list<string> = files "*.nix"
 
-    let merge: record<stdout: string, stderr: string, exit_code: int> = do { git merge-base $main HEAD } | complete
-    let base: string = $merge.stdout | str trim
-    if $base != (git rev-parse HEAD | str trim) {
-        committed $"($base)..HEAD"
-    }
+    # Git
+    committed origin/main..HEAD
 
     # GitHub
     zizmor --pedantic .github
@@ -24,34 +17,35 @@ def main []: nothing -> nothing {
 
     # Markdown
     lychee --verbose .
-
-    # Tree Sitter
-    tree-sitter-check
-
-    npm ci
-    npx vitest run
-
-    # Nushell
-    let scripts: list<string> = glob "scripts/**/*.nu"
-    nufmt --dry-run ...$scripts
-
-    for script: string in $scripts {
-        let diagnostics: string = do { nu --ide-check 100 $script } | complete | get stdout
-        if ($diagnostics | str contains '"type":"diagnostic"') {
-            print $"nu diagnostics in ($script):"
-            print $diagnostics
-            exit 1
-        }
+    let alerts = vale --no-exit --output=JSON ...$markdown | from json
+    if ($alerts | is-not-empty) {
+        vale ...$markdown
+        exit 1
     }
 
     # TOML
     tombi lint --error-on-warnings
 
+    # Nushell
+    nufmt --dry-run ...$scripts
+    nu-lint --config .nu-lint.toml ...$scripts
+
+    # Tree Sitter
+    tree-sitter-check
+
     # Nix
     nix flake check
     nix build --no-link .#tree-sitter-cedar .#tree-sitter-cedarschema .#tree-sitter-cedarentities
-    nixfmt --check --width=120 ...(git ls-files "*.nix" | lines)
+    nixfmt --check --width=120 ...$nix
     deadnix --fail .
+
+    # Node
+    npm ci
+    npx vitest run
+}
+
+def files [pattern: string]: nothing -> list<string> {
+    git ls-files --cached --others --exclude-standard $pattern | lines
 }
 
 def tree-sitter-check []: nothing -> nothing {
@@ -65,9 +59,8 @@ def tree-sitter-check []: nothing -> nothing {
     }
 
     let dirty = git status --porcelain -- "*/src/*" | str trim
-    if $dirty != "" {
-        print "parsers are stale:"
-        print $dirty
+    if ($dirty | is-not-empty) {
+        print --stderr "Working tree dirty"
         exit 1
     }
 

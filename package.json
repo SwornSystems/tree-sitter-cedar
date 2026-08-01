@@ -1,5 +1,5 @@
 {
-  "name": "@dusksystems/tree-sitter-cedar",
+  "name": "@swornsystems/tree-sitter-cedar",
   "version": "0.11.2",
   "type": "module",
   "description": "Cedar grammars for tree-sitter",
@@ -13,7 +13,7 @@
   ],
   "license": "MIT OR Apache-2.0",
   "author": "Cathal Mullan <contact@cathal.dev>",
-  "repository": "https://github.com/DuskSystems/tree-sitter-cedar",
+  "repository": "https://github.com/SwornSystems/tree-sitter-cedar",
   "files": [
     "LICENSE-*",
     "README.md",
@@ -28,7 +28,7 @@
   "devDependencies": {
     "@vitest/browser-playwright": "4.1.10",
     "playwright": "1.61.1",
-    "release-please": "17.10.3",
+    "release-please": "17.11.1",
     "vitest": "4.1.10"
   }
 }
