@@ -8,7 +8,7 @@ def main []: nothing -> nothing {
     }
 
     let message: string = git log -1 --format=%s | str trim
-    if not ($message | str starts-with "chore: Release v") {
+    if $message !~ '^chore: Release v' {
         return
     }
 
