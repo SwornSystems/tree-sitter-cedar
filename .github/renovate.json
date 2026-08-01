@@ -3,7 +3,12 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
 
   "dependencyDashboard": true,
-  "enabledManagers": ["github-actions", "nix", "npm"],
+  "enabledManagers": ["npm", "github-actions", "nix"],
+
+  // https://docs.renovatebot.com/modules/manager/npm
+  "npm": {
+    "enabled": true
+  },
 
   // https://docs.renovatebot.com/modules/manager/github-actions
   "github-actions": {
@@ -15,10 +20,13 @@
     "enabled": true
   },
 
-  // https://docs.renovatebot.com/modules/manager/npm
-  "npm": {
-    "enabled": true
-  },
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["playwright"],
+      "enabled": false
+    }
+  ],
 
   "lockFileMaintenance": {
     "enabled": true

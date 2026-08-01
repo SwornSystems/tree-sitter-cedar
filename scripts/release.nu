@@ -1,14 +1,15 @@
 #!/usr/bin/env -S nix develop .#ci --command nu
 
-# Create the GitHub release and publish to npm.
+# Publish a release.
 def main []: nothing -> nothing {
-    if ($env.CI? | default "false") != "true" {
+    if $env.CI? != "true" {
+        print --stderr "Not running in CI"
         exit 1
     }
 
     let message: string = git log -1 --format=%s | str trim
     if not ($message | str starts-with "chore: Release v") {
-        exit 0
+        return
     }
 
     npm ci
@@ -16,7 +17,7 @@ def main []: nothing -> nothing {
 
     (
         npx release-please github-release
-            --repo-url DuskSystems/tree-sitter-cedar
+            --repo-url SwornSystems/tree-sitter-cedar
             --token $env.GITHUB_TOKEN
             --draft
     )

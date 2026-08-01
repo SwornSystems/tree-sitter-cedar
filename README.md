@@ -1,5 +1,5 @@
 ![license: MIT/Apache-2.0](https://img.shields.io/badge/license-MIT%2FApache--2.0-blue.svg)
-[![npm](https://img.shields.io/npm/v/@dusksystems/tree-sitter-cedar)](https://www.npmjs.com/package/@dusksystems/tree-sitter-cedar)
+[![npm](https://img.shields.io/npm/v/@swornsystems/tree-sitter-cedar)](https://www.npmjs.com/package/@swornsystems/tree-sitter-cedar)
 
 # `tree-sitter-cedar`
 
@@ -19,4 +19,4 @@ Cedar grammars for tree-sitter.
 
 ## License
 
-`tree-sitter-cedar` is licensed under the terms of both the [MIT License](LICENSE-MIT) and the [Apache License (Version 2.0)](LICENSE-APACHE).
+Licensed under the terms of both the [MIT License](LICENSE-MIT) and the [Apache License (Version 2.0)](LICENSE-APACHE).

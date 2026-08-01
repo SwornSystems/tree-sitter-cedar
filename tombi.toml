@@ -1,8 +1,5 @@
 # https://tombi-toml.github.io/tombi/docs/configuration
 
-[files]
-exclude = []
-
 [lsp]
 formatting.enabled = false
 

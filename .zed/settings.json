@@ -30,7 +30,7 @@
     },
 
     "Markdown": {
-      "language_servers": ["typos"],
+      "language_servers": ["vale", "typos"],
       "soft_wrap": "none"
     },
 
@@ -56,7 +56,7 @@
     },
 
     "Nu": {
-      "language_servers": ["nu"],
+      "language_servers": ["nu", "nu-lint"],
       "format_on_save": "on",
       "formatter": {
         "external": {
@@ -111,6 +111,12 @@
       }
     },
 
+    "vale": {
+      "binary": {
+        "path": "vale-ls"
+      }
+    },
+
     "tombi": {
       "binary": {
         "path": "tombi",
@@ -136,6 +142,13 @@
       "binary": {
         "path": "nu",
         "arguments": ["--lsp"]
+      }
+    },
+
+    "nu-lint": {
+      "binary": {
+        "path": "nu-lint",
+        "arguments": ["--lsp", "--config", ".nu-lint.toml"]
       }
     }
   }

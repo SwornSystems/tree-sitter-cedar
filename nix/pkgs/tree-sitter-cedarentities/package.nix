@@ -26,7 +26,7 @@ tree-sitter.buildGrammar {
 
   meta = {
     description = "Cedar entities grammar for tree-sitter";
-    homepage = "https://github.com/DuskSystems/tree-sitter-cedar";
+    homepage = "https://github.com/SwornSystems/tree-sitter-cedar";
     license = with lib.licenses; [
       mit
       asl20
