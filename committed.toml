@@ -9,6 +9,8 @@ allowed_types = [
   "perf",
   "docs",
   "test",
+  "fuzz",
+  "bench",
   "refactor",
   "style",
   "ci",
